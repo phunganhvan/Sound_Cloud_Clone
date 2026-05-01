@@ -20,6 +20,9 @@ import { Container } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -61,6 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
+    const { data: session } = useSession();
 
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -106,7 +110,7 @@ export default function AppHeader() {
         >
             <MenuItem >
                 <Link href="/profile"
-                    style={{color: "unset", textDecoration: "none"}}
+                    style={{ color: "unset", textDecoration: "none" }}
                 >Profile</Link>
             </MenuItem>
             <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
@@ -184,7 +188,7 @@ export default function AppHeader() {
                             noWrap
                             component="div"
                             sx={{ display: { xs: 'none', sm: 'block' }, cursor: "pointer" }}
-                            onClick= {() => handleRedirectHome}
+                            onClick={() => handleRedirectHome}
                         >
                             Sound Cloud PAV
                         </Typography>
@@ -210,15 +214,25 @@ export default function AppHeader() {
                                     textDecoration: "none"
                                 }
                             }
-                        }}          >
-                            <Link href="/playlist">Playlist</Link>
-                            <Link href="/likes">Likes</Link>
-                            <Link href="/upload">Upload</Link>
-                            <Avatar
-                                onClick={handleProfileMenuOpen}
-                            >
-                                PAV
-                            </Avatar>
+                        }}>
+                            {session ? (
+                                <>
+                                    <Link href="/playlist">Playlist</Link>
+                                    <Link href="/likes">Likes</Link>
+                                    <Link href="/upload">Upload</Link>
+                                    <Avatar
+                                        onClick={handleProfileMenuOpen}
+                                    >
+                                        PAV
+                                    </Avatar>
+                                </>
+                            )
+                                : (
+                                    <>
+                                        <Link href="/api/auth/signin">Login</Link>
+                                    </>
+                                )}
+
                             {/* <IconButton
                                 size="large"
                                 edge="end"
