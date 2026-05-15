@@ -10,7 +10,19 @@ export const authOptions: AuthOptions = {
             clientSecret: process.env.GITHUB_SECRET!,
         }),
         // ...add more providers here
-    ]
+    ],
+    callbacks: {
+        jwt({ token, user, account, profile, trigger }) {
+            if (trigger === "signIn" && account.provider === "github") {
+                token.address = "phung anh van";
+            }
+            return token;
+        },
+        session({ session, token, user }) {
+            session.address = token.address;
+            return session;
+        }
+    }
 }
 const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST}
+export { handler as GET, handler as POST }
