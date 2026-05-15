@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
             return token;
         },
         session({ session, token, user }) {
-            session.address = token.address;
+            session.user.address = token.access_token;
             return session;
         }
     }
